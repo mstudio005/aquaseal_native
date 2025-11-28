@@ -72,6 +72,107 @@ async function callPythonAPI(method, data) {
 }
 
 // ===========================
+// Toast Notification System
+// ===========================
+function showToast(type, title, message, duration = 3000) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+        error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+        warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+        info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+    };
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || icons.info}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            ${message ? `<div class="toast-message">${message}</div>` : ''}
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="toast-progress">
+            <div class="toast-progress-bar" style="animation-duration: ${duration}ms"></div>
+        </div>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Auto remove after duration
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+    
+    return toast;
+}
+
+// Confirm Dialog
+function showConfirmDialog(title, message, onConfirm, onCancel = null) {
+    // Remove any existing dialog
+    const existingDialog = document.getElementById('confirm-dialog-overlay');
+    if (existingDialog) existingDialog.remove();
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'confirm-dialog-overlay';
+    overlay.className = 'confirm-overlay';
+    
+    overlay.innerHTML = `
+        <div class="confirm-dialog">
+            <div class="confirm-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+            <h3 class="confirm-title">${title}</h3>
+            <p class="confirm-message">${message}</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn cancel" id="confirm-cancel">Cancel</button>
+                <button class="confirm-btn danger" id="confirm-ok">Confirm</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    // Add animation class
+    requestAnimationFrame(() => overlay.classList.add('active'));
+    
+    const closeDialog = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 200);
+    };
+    
+    document.getElementById('confirm-cancel').addEventListener('click', () => {
+        closeDialog();
+        if (onCancel) onCancel();
+    });
+    
+    document.getElementById('confirm-ok').addEventListener('click', () => {
+        closeDialog();
+        onConfirm();
+    });
+    
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeDialog();
+            if (onCancel) onCancel();
+        }
+    });
+}
+
+// ===========================
 // Multi-Language Support
 // ===========================
 const TRANSLATIONS = {
@@ -610,7 +711,8 @@ function addToDownloadsHistory(item) {
 
 function removeFromDownloadsHistory(id) {
     const downloads = getDownloadsHistory();
-    const filtered = downloads.filter(d => d.id !== id);
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+    const filtered = downloads.filter(d => d.id !== numericId && d.id !== id && String(d.id) !== String(id));
     saveDownloadsHistory(filtered);
     return filtered;
 }
@@ -838,10 +940,15 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 // Clear all downloads button
 if (clearDownloadsBtn) {
     clearDownloadsBtn.addEventListener('click', () => {
-        if (confirm(TRANSLATIONS[currentLanguage]?.clearAll || 'Clear all downloads?')) {
-            clearDownloadsHistory();
-            renderDownloadsList();
-        }
+        showConfirmDialog(
+            TRANSLATIONS[currentLanguage]?.clearAll || 'Clear All Downloads',
+            'This will remove all download history. This action cannot be undone.',
+            () => {
+                clearDownloadsHistory();
+                renderDownloadsList();
+                showToast('success', 'Cleared', 'All download history has been removed');
+            }
+        );
     });
 }
 
@@ -1038,11 +1145,13 @@ function renderDownloadsList() {
 
 async function openDownloadedFile(id) {
     const downloads = getDownloadsHistory();
-    const item = downloads.find(i => i.id === id);
+    // Convert id to number for comparison (stored as number, passed as string from onclick)
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+    const item = downloads.find(i => i.id === numericId || i.id === id || String(i.id) === String(id));
     
     if (!item) {
-        console.error('Download item not found:', id);
-        alert('Download item not found');
+        console.error('Download item not found. ID:', id, 'Type:', typeof id, 'Downloads:', downloads.map(d => d.id));
+        showToast('error', 'Not Found', 'Download item not found in history');
         return;
     }
     
@@ -1077,10 +1186,11 @@ async function openDownloadedFile(id) {
             if (urlToOpen) {
                 console.log('No file path, opening URL:', urlToOpen);
                 await FileOpener.openUrl({ url: urlToOpen });
+                showToast('success', 'Opening', 'Opening in external app...');
                 return;
             }
             
-            alert('No file or URL available for this download');
+            showToast('warning', 'No File', 'No file or URL available for this download');
             
         } catch (error) {
             console.error('Error opening file:', error);
@@ -1091,12 +1201,13 @@ async function openDownloadedFile(id) {
                 try {
                     console.log('Fallback: opening URL:', urlToOpen);
                     await FileOpener.openUrl({ url: urlToOpen });
+                    showToast('info', 'Opening URL', 'Opening original URL instead');
                 } catch (urlError) {
                     console.error('Error opening URL:', urlError);
-                    alert('Could not open file or URL.\nFile: ' + (item.filePath || 'N/A') + '\nError: ' + (error.message || 'Unknown error'));
+                    showToast('error', 'Cannot Open', 'File: ' + (item.filePath ? item.filePath.split('/').pop() : 'N/A'));
                 }
             } else {
-                alert('Could not open file.\nFile: ' + (item.filePath || 'N/A') + '\nError: ' + (error.message || 'Unknown error'));
+                showToast('error', 'Cannot Open', error.message || 'Failed to open file');
             }
         }
     } else {
@@ -1104,15 +1215,18 @@ async function openDownloadedFile(id) {
         const urlToOpen = item.url || item.thumbnail;
         if (urlToOpen) {
             window.open(urlToOpen, '_blank');
+            showToast('success', 'Opening', 'Opening in new tab...');
         } else {
-            alert('No URL available for this download');
+            showToast('warning', 'No URL', 'No URL available for this download');
         }
     }
 }
 
 function deleteDownloadItem(id) {
-    removeFromDownloadsHistory(id);
+    const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+    removeFromDownloadsHistory(numericId);
     renderDownloadsList();
+    showToast('success', 'Deleted', 'Download removed from history');
 }
 
 // ===========================
@@ -1493,8 +1607,8 @@ async function handleDownloadThumbnail() {
             });
             
             console.log('Thumbnail saved to:', result.path || result.filename);
-            // Show success
-            alert('Thumbnail saved to Pictures folder!');
+            // Show success toast
+            showToast('success', 'Thumbnail Saved', 'Saved to Pictures folder');
             return;
         }
         

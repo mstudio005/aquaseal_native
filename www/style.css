@@ -3923,3 +3923,286 @@ body.rtl .quality-label {
         height: 16px;
     }
 }
+
+/* ===========================
+   Toast Notifications
+   =========================== */
+.toast-container {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    pointer-events: none;
+    max-width: 90%;
+    width: 360px;
+}
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: rgba(15, 15, 25, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    pointer-events: auto;
+    animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center bottom;
+}
+
+.toast.hiding {
+    animation: toastSlideOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toastSlideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.toast-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.toast.success .toast-icon {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+    color: #10b981;
+}
+
+.toast.error .toast-icon {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+    color: #ef4444;
+}
+
+.toast.warning .toast-icon {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+    color: #f59e0b;
+}
+
+.toast.info .toast-icon {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.2));
+    color: #6366f1;
+}
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.toast-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+}
+
+.toast-message {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast) var(--ease-out);
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+}
+
+.toast-close svg {
+    width: 14px;
+    height: 14px;
+}
+
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    overflow: hidden;
+}
+
+.toast-progress-bar {
+    height: 100%;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    animation: toastProgress 3s linear forwards;
+}
+
+.toast.success .toast-progress-bar {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.toast.error .toast-progress-bar {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.toast.warning .toast-progress-bar {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.toast.info .toast-progress-bar {
+    background: linear-gradient(90deg, #6366f1, #4f46e5);
+}
+
+@keyframes toastProgress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+/* ===========================
+   Confirm Dialog
+   =========================== */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    padding: var(--space-4);
+}
+
+.confirm-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirm-dialog {
+    background: rgba(20, 20, 35, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-6);
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+.confirm-overlay.active .confirm-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.confirm-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--space-4);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f59e0b;
+}
+
+.confirm-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.confirm-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.confirm-message {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: var(--space-5);
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: var(--space-3);
+}
+
+.confirm-btn {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--duration-base) var(--ease-out);
+    border: none;
+}
+
+.confirm-btn.cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-secondary);
+}
+
+.confirm-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-text-primary);
+}
+
+.confirm-btn.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.confirm-btn.danger:hover {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
