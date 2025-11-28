@@ -5,25 +5,75 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  NODE_VERSION: '20'
+  JAVA_VERSION: '21'
+  ANDROID_API_LEVEL: '35'
+  ANDROID_BUILD_TOOLS: '35.0.0'
+
 jobs:
-  create-release:
+  build-and-release:
+    name: Build APK and publish release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
-          body: |
-            Release ${{ github.ref_name }}
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Sync Capacitor Android project
+        run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          components: |
+            platform-tools
+            platforms;android-${{ env.ANDROID_API_LEVEL }}
+            build-tools;${{ env.ANDROID_BUILD_TOOLS }}
+
+      - name: Make Gradle executable
+        run: chmod +x android/gradlew
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk dist/AquaSeal-${{ github.ref_name }}-debug.apk
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AquaSeal-${{ github.ref_name }}-debug
+          path: dist/AquaSeal-${{ github.ref_name }}-debug.apk
+          retention-days: 7
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/AquaSeal-${{ github.ref_name }}-debug.apk
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# NOTE: This workflow creates a release object on GitHub when a tag is pushed.
-# To build and upload APK artifacts you can extend this job to install the
-# Android SDK, build with Gradle and then upload artifacts with
-# actions/upload-release-asset. Building Android in CI requires additional
-# configuration (Android SDK, signing keys, sufficient memory).
+# The workflow currently builds the debug variant. To ship signed release APKs,
+# add keystore secrets, configure Gradle signing configs, and switch to
+# `./gradlew assembleRelease` plus an upload of the release output.
