@@ -1042,20 +1042,23 @@ async function openDownloadedFile(id) {
     
     if (!item) {
         console.error('Download item not found:', id);
+        alert('Download item not found');
         return;
     }
+    
+    console.log('Opening download:', JSON.stringify(item));
     
     // On Android/Capacitor, use the FileOpener plugin
     if (isCapacitor && FileOpener) {
         try {
             // If we have a file path, open it with system app
-            if (item.filePath) {
+            if (item.filePath && item.filePath.length > 0) {
                 // Determine MIME type based on download type
                 let mimeType = '*/*';
                 if (item.type === 'video' || item.type === 'playlist') {
-                    mimeType = 'video/*';
+                    mimeType = 'video/mp4';
                 } else if (item.type === 'thumbnail') {
-                    mimeType = 'image/*';
+                    mimeType = 'image/jpeg';
                 }
                 
                 console.log('Opening file:', item.filePath, 'with MIME:', mimeType);
@@ -1065,32 +1068,42 @@ async function openDownloadedFile(id) {
                     mimeType: mimeType
                 });
                 
-                console.log('File opened:', result);
-            } else if (item.url) {
-                // No file path, open URL in browser/app
-                console.log('Opening URL:', item.url);
-                await FileOpener.openUrl({ url: item.url });
+                console.log('File opened successfully:', result);
+                return;
             }
+            
+            // No file path or file doesn't exist, try opening URL
+            const urlToOpen = item.url || item.thumbnail;
+            if (urlToOpen) {
+                console.log('No file path, opening URL:', urlToOpen);
+                await FileOpener.openUrl({ url: urlToOpen });
+                return;
+            }
+            
+            alert('No file or URL available for this download');
+            
         } catch (error) {
             console.error('Error opening file:', error);
+            
             // Fallback: try opening URL if available
-            if (item.url) {
+            const urlToOpen = item.url || item.thumbnail;
+            if (urlToOpen) {
                 try {
-                    await FileOpener.openUrl({ url: item.url });
+                    console.log('Fallback: opening URL:', urlToOpen);
+                    await FileOpener.openUrl({ url: urlToOpen });
                 } catch (urlError) {
                     console.error('Error opening URL:', urlError);
-                    alert('Could not open file. Error: ' + (error.message || 'Unknown error'));
+                    alert('Could not open file or URL.\nFile: ' + (item.filePath || 'N/A') + '\nError: ' + (error.message || 'Unknown error'));
                 }
             } else {
-                alert('Could not open file. Error: ' + (error.message || 'Unknown error'));
+                alert('Could not open file.\nFile: ' + (item.filePath || 'N/A') + '\nError: ' + (error.message || 'Unknown error'));
             }
         }
     } else {
         // On web, open URL in new tab
-        if (item.url) {
-            window.open(item.url, '_blank');
-        } else if (item.thumbnail) {
-            window.open(item.thumbnail, '_blank');
+        const urlToOpen = item.url || item.thumbnail;
+        if (urlToOpen) {
+            window.open(urlToOpen, '_blank');
         } else {
             alert('No URL available for this download');
         }
@@ -1258,6 +1271,8 @@ async function handleDownload() {
                 formatId: selectedVideoFormat || 'best'
             });
             
+            console.log('Download result:', JSON.stringify(result));
+            
             if (result.error) {
                 throw new Error(result.error);
             }
@@ -1266,6 +1281,8 @@ async function handleDownload() {
             progressPercentage.textContent = '100%';
             progressSpeed.textContent = 'Complete!';
             downloadVideoBtn.querySelector('span').textContent = 'Downloaded! ✓';
+            
+            console.log('Video saved to:', result.filename);
             
             // Add to download history
             addToDownloadsHistory({
@@ -1465,16 +1482,17 @@ async function handleDownloadThumbnail() {
                 throw new Error(result.error);
             }
             
-            // Add to download history
+            // Add to download history - Python returns 'path' for thumbnails
             addToDownloadsHistory({
                 title: currentVideoInfo.title || 'Thumbnail',
                 thumbnail: currentVideoInfo.thumbnail,
                 type: 'thumbnail',
                 platform: currentPlatform,
                 url: currentVideoInfo.thumbnail,
-                filePath: result.filename || ''
+                filePath: result.path || result.filename || ''
             });
             
+            console.log('Thumbnail saved to:', result.path || result.filename);
             // Show success
             alert('Thumbnail saved to Pictures folder!');
             return;
