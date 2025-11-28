@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="AquaSeal - Download videos from YouTube, Instagram, Facebook, Twitter, TikTok and 1000+ sites. Fast, modern, and easy to use.">
+    <meta name="theme-color" content="#6366f1">
+
+    <!-- SEO Meta Tags -->
+    <meta name="keywords"
+        content="youtube downloader, instagram downloader, facebook video downloader, tiktok downloader, twitter video download, video downloader">
+    <meta name="author" content="AquaSeal">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="AquaSeal - Universal Video Downloader">
+    <meta property="og:description" content="Download videos from YouTube, Instagram, Facebook, TikTok & 1000+ sites">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link rel="apple-touch-icon" href="logo.jpg">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AquaSeal">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>AquaSeal - Universal Video Downloader</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Background Effects -->
+    <div class="bg-gradient"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo" id="logo-home">
+                    <img src="logo.jpg" alt="AquaSeal Logo" class="logo-icon">
+                    <h1 class="logo-text">AquaSeal</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="tutorial-btn" class="icon-btn" title="Tutorial">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <path d="M12 17h.01"/>
+                        </svg>
+                    </button>
+                    <button id="language-btn" class="icon-btn" title="Language">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <p class="tagline" data-i18n="tagline">Universal Video Downloader</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- ==================== -->
+            <!-- PLATFORM SELECTION PAGE -->
+            <!-- ==================== -->
+            <div id="platform-page" class="page active">
+                <div class="section-header">
+                    <h2 class="section-title-large" data-i18n="choosePlatform">Choose Platform</h2>
+                    <p class="section-description" data-i18n="selectWhere">Select where you want to download from</p>
+                </div>
+
+                <!-- Main Platforms Grid -->
+                <div class="platforms-grid">
+                    <!-- YouTube -->
+                    <button class="platform-card youtube" data-platform="youtube">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </div>
+                        <span class="platform-name">YouTube</span>
+                        <span class="platform-desc" data-i18n="ytDesc">Videos, Shorts, Music</span>
+                    </button>
+
+                    <!-- Instagram -->
+                    <button class="platform-card instagram" data-platform="instagram">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                            </svg>
+                        </div>
+                        <span class="platform-name">Instagram</span>
+                        <span class="platform-desc" data-i18n="igDesc">Reels, Posts, Stories</span>
+                    </button>
+
+                    <!-- Facebook -->
+                    <button class="platform-card facebook" data-platform="facebook">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </div>
+                        <span class="platform-name">Facebook</span>
+                        <span class="platform-desc" data-i18n="fbDesc">Videos, Reels, Watch</span>
+                    </button>
+
+                    <!-- TikTok -->
+                    <button class="platform-card tiktok" data-platform="tiktok">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                            </svg>
+                        </div>
+                        <span class="platform-name">TikTok</span>
+                        <span class="platform-desc" data-i18n="ttDesc">Videos, Sounds</span>
+                    </button>
+
+                    <!-- Twitter/X -->
+                    <button class="platform-card twitter" data-platform="twitter">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </div>
+                        <span class="platform-name">Twitter / X</span>
+                        <span class="platform-desc" data-i18n="twDesc">Videos, GIFs</span>
+                    </button>
+
+                    <!-- Other/All -->
+                    <button class="platform-card other" data-platform="other">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                        </div>
+                        <span class="platform-name" data-i18n="otherSites">Other Sites</span>
+                        <span class="platform-desc" data-i18n="otherDesc">1000+ supported</span>
+                    </button>
+                </div>
+
+                <!-- View All Supported Sites Button -->
+                <button id="view-all-sites-btn" class="view-all-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <span data-i18n="viewAllSites">View All Supported Sites</span>
+                </button>
+
+                <!-- Features -->
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title" data-i18n="fastDownloads">Fast Downloads</h3>
+                        <p class="feature-description" data-i18n="highSpeed">High-speed servers</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title" data-i18n="multiQuality">Multiple Qualities</h3>
+                        <p class="feature-description">4K, 1080p, 720p</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title" data-i18n="safeSecure">Safe & Secure</h3>
+                        <p class="feature-description" data-i18n="noData">No data stored</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title" data-i18n="mobileReady">Mobile Ready</h3>
+                        <p class="feature-description" data-i18n="worksEverywhere">Works everywhere</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== -->
+            <!-- SUPPORTED SITES PAGE -->
+            <!-- ==================== -->
+            <div id="sites-page" class="page">
+                <div class="page-header">
+                    <button id="sites-back-btn" class="back-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span data-i18n="back">Back</span>
+                    </button>
+                    <h2 class="page-title" data-i18n="supportedSites">Supported Sites</h2>
+                </div>
+
+                <div class="sites-search">
+                    <input type="text" id="sites-search-input" class="sites-search-input" data-i18n-placeholder="searchSites" placeholder="Search sites...">
+                </div>
+
+                <div class="sites-count">
+                    <span id="sites-count-number">70+</span> <span data-i18n="supportedWebsites">supported websites</span>
+                </div>
+
+                <div id="sites-list" class="sites-list">
+                    <!-- Sites will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- ==================== -->
+            <!-- TUTORIAL PAGE -->
+            <!-- ==================== -->
+            <div id="tutorial-page" class="page">
+                <div class="page-header">
+                    <button id="tutorial-back-btn" class="back-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span data-i18n="back">Back</span>
+                    </button>
+                    <h2 class="page-title" data-i18n="howToUse">How to Use</h2>
+                </div>
+
+                <div class="tutorial-content">
+                    <p class="tutorial-intro" data-i18n="tutorialIntro">Follow these simple steps to download videos from any platform</p>
+                    
+                    <div class="tutorial-steps">
+                        <div class="tutorial-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3 data-i18n="step1Title">Choose Platform</h3>
+                                <p data-i18n="step1Desc">Select the platform from which you want to download (YouTube, Instagram, Facebook, etc.)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3 data-i18n="step2Title">Copy Video URL</h3>
+                                <p data-i18n="step2Desc">Go to the video you want to download and copy its URL/link from the address bar or share button</p>
+                            </div>
+                        </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 data-i18n="step3Title">Paste URL</h3>
+                            <p data-i18n="step3Desc">Paste the copied URL in the input field and tap "Get Video Info"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3 data-i18n="step4Title">Select Quality</h3>
+                            <p data-i18n="step4Desc">Choose your preferred video quality (1080p, 720p, 480p, etc.)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3 data-i18n="step5Title">Download</h3>
+                            <p data-i18n="step5Desc">Tap the "Download Video" button and wait for the download to complete</p>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="tutorial-tips">
+                        <h3 data-i18n="tipsTitle">💡 Tips</h3>
+                        <ul>
+                            <li data-i18n="tip1">Make sure you have a stable internet connection</li>
+                            <li data-i18n="tip2">Higher quality = larger file size</li>
+                            <li data-i18n="tip3">Downloaded videos are saved to your device's download folder</li>
+                            <li data-i18n="tip4">You can stop the download anytime using the Stop button</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== -->
+            <!-- DOWNLOAD PAGE (Per Platform) -->
+            <!-- ==================== -->
+            <div id="download-page" class="page">
+                <div class="page-header">
+                    <button id="download-back-btn" class="back-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span data-i18n="back">Back</span>
+                    </button>
+                    <h2 class="page-title" id="download-page-title">YouTube Downloader</h2>
+                </div>
+
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <div class="platform-indicator" id="platform-indicator">
+                            <div class="platform-indicator-icon" id="platform-indicator-icon"></div>
+                            <span id="platform-indicator-name">YouTube</span>
+                        </div>
+                        <p class="card-description" id="download-description" data-i18n="pasteUrl">Paste a video URL to download</p>
+                    </div>
+
+                    <div class="input-section">
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" />
+                                <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                            <input type="text" id="url-input" class="url-input"
+                                placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" spellcheck="false">
+                            <button id="clear-btn" class="clear-btn" aria-label="Clear input">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        <button id="fetch-btn" class="fetch-btn">
+                            <span class="btn-text" data-i18n="getVideoInfo">Get Video Info</span>
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="error-message" class="error-message hidden">
+                        <svg class="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        <span id="error-text"></span>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loading-state" class="loading-state hidden">
+                        <div class="loader"></div>
+                        <p class="loading-text" data-i18n="fetchingInfo">Fetching video information...</p>
+                    </div>
+
+                    <!-- Video Info & Download Section -->
+                    <div id="video-section" class="video-section hidden">
+                        <div class="video-info-card">
+                            <div class="video-info-header">
+                                <div class="video-thumbnail-wrapper">
+                                    <img id="video-thumbnail" class="video-info-thumbnail" alt="Video thumbnail" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.style.display='none'; document.getElementById('thumbnail-placeholder').style.display='flex';">
+                                    <div class="thumbnail-placeholder" id="thumbnail-placeholder">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                            <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <button id="play-video-btn" class="play-video-overlay" title="Play Video">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <polygon points="5,3 19,12 5,21"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="video-info-details">
+                                    <h3 id="video-title" class="video-info-title"></h3>
+                                    <p id="video-channel" class="video-info-meta"></p>
+                                    <p id="video-duration" class="video-info-meta"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quality-section">
+                            <h3 class="quality-title" data-i18n="selectQuality">Select Quality</h3>
+                            <div id="video-quality-options" class="quality-options video-quality-grid">
+                                <!-- Quality options will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="download-buttons">
+                            <button id="download-video-btn" class="download-btn">
+                                <svg class="download-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span data-i18n="downloadVideo">Download Video</span>
+                            </button>
+                            <button id="download-thumbnail-btn" class="download-btn secondary-btn hidden">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <path d="M21 15l-5-5L5 21"/>
+                                </svg>
+                                <span data-i18n="downloadThumbnail">Download Thumbnail</span>
+                            </button>
+                            <button id="stop-download-btn" class="stop-btn hidden">
+                                <svg class="stop-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" />
+                                </svg>
+                                <span data-i18n="stop">Stop</span>
+                            </button>
+                        </div>
+
+                        <!-- Download Progress -->
+                        <div id="download-progress" class="download-progress hidden">
+                            <div class="progress-header">
+                                <span class="progress-percentage" id="progress-percentage">0%</span>
+                                <span id="progress-size">0 MB / 0 MB</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span id="progress-speed">0 KB/s</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Playlist Section (YouTube Only) -->
+                    <div id="playlist-section" class="playlist-section hidden">
+                        <div class="playlist-header">
+                            <div class="playlist-info">
+                                <h3 id="playlist-title" class="playlist-title"></h3>
+                                <p id="playlist-meta" class="playlist-meta"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Playlist Controls -->
+                        <div class="playlist-controls">
+                            <div class="playlist-controls-row">
+                                <div class="selection-controls">
+                                    <button id="select-all-btn" class="control-btn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <path d="M9 12l2 2 4-4"/>
+                                        </svg>
+                                        <span data-i18n="selectAll">Select All</span>
+                                    </button>
+                                    <button id="deselect-all-btn" class="control-btn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        </svg>
+                                        <span data-i18n="deselectAll">Deselect All</span>
+                                    </button>
+                                </div>
+                                <div class="selected-count">
+                                    <span id="selected-count-text">0 selected</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Range Selection -->
+                            <div class="range-selection">
+                                <label data-i18n="selectRange">Select Range:</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="range-start" min="1" placeholder="From" class="range-input">
+                                    <span class="range-separator">to</span>
+                                    <input type="number" id="range-end" placeholder="To" class="range-input">
+                                    <button id="apply-range-btn" class="control-btn small">
+                                        <span data-i18n="applyRange">Apply</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Quality Selection for Batch -->
+                            <div class="batch-quality">
+                                <label data-i18n="downloadQuality">Download Quality:</label>
+                                <select id="batch-quality-select" class="quality-select">
+                                    <option value="best">Best Quality (1080p+)</option>
+                                    <option value="1080">1080p HD</option>
+                                    <option value="720" selected>720p HD</option>
+                                    <option value="480">480p SD</option>
+                                    <option value="360">360p</option>
+                                    <option value="audio">Audio Only (MP3)</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Download Actions -->
+                            <div class="playlist-actions">
+                                <button id="download-selected-btn" class="download-btn playlist-download-btn" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                    </svg>
+                                    <span data-i18n="downloadSelected">Download Selected</span>
+                                </button>
+                                <button id="download-all-btn" class="download-btn secondary-btn playlist-download-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                    </svg>
+                                    <span data-i18n="downloadAll">Download All</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Batch Download Progress -->
+                            <div id="batch-progress" class="batch-progress hidden">
+                                <div class="batch-progress-header">
+                                    <span id="batch-progress-text">Downloading 0 of 0</span>
+                                    <button id="stop-batch-btn" class="control-btn danger">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="6" y="6" width="12" height="12" rx="2"/>
+                                        </svg>
+                                        <span data-i18n="stopAll">Stop All</span>
+                                    </button>
+                                </div>
+                                <div class="batch-progress-bar">
+                                    <div id="batch-progress-fill" class="batch-progress-fill"></div>
+                                </div>
+                                <p id="batch-current-video" class="batch-current-video"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="playlist-videos-wrapper">
+                            <h4 class="playlist-videos-title" data-i18n="playlistVideos">Playlist Videos</h4>
+                            <div id="playlist-videos" class="playlist-videos">
+                                <!-- Playlist videos will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 AquaSeal. <span data-i18n="madeWith">Made with</span> ❤️ <span data-i18n="forVideoLovers">for video lovers.</span></p>
+        </footer>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="video-player-modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content video-player-modal-content">
+            <div class="modal-header">
+                <h3 id="video-player-title">Video Player</h3>
+                <button class="modal-close" id="video-player-modal-close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="video-player-container">
+                <iframe id="video-player-iframe" 
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Modal -->
+    <div id="language-modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content language-modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="selectLanguage">Select Language</h3>
+                <button class="modal-close" id="language-modal-close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="language-options">
+                <button class="language-option" data-lang="en">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span class="lang-name">English</span>
+                </button>
+                <button class="language-option" data-lang="ur">
+                    <span class="lang-flag">🇵🇰</span>
+                    <span class="lang-name">اردو (Urdu)</span>
+                </button>
+                <button class="language-option" data-lang="hi">
+                    <span class="lang-flag">🇮🇳</span>
+                    <span class="lang-name">हिंदी (Hindi)</span>
+                </button>
+                <button class="language-option" data-lang="hinglish">
+                    <span class="lang-flag">🌐</span>
+                    <span class="lang-name">Hinglish</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

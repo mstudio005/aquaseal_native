@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AquaSeal</string>
+    <string name="title_activity_main">AquaSeal</string>
+    <string name="package_name">com.mutaibstudio.aquaseal</string>
+    <string name="custom_url_scheme">com.mutaibstudio.aquaseal</string>
+</resources>
