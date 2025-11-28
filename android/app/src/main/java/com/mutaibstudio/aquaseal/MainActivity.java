@@ -14,8 +14,9 @@ public class MainActivity extends BridgeActivity {
             Python.start(new AndroidPlatform(this));
         }
         
-        // Register the Python Bridge plugin
+        // Register plugins
         registerPlugin(PythonBridgePlugin.class);
+        registerPlugin(FileOpenerPlugin.class);
         
         super.onCreate(savedInstanceState);
     }

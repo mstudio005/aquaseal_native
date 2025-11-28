@@ -9,8 +9,10 @@ const API_BASE_URL = 'http://localhost:3000/api';
 
 // Capacitor Plugin Bridge
 let PythonBridge = null;
+let FileOpener = null;
 if (isCapacitor && Capacitor.Plugins) {
     PythonBridge = Capacitor.Plugins.PythonBridge;
+    FileOpener = Capacitor.Plugins.FileOpener;
 }
 
 // Helper function to call Python via Capacitor or fallback to HTTP API
@@ -1012,7 +1014,7 @@ function renderDownloadsList() {
                 </div>
             </div>
             <div class="download-item-actions">
-                ${item.filePath ? `
+                ${(item.filePath || item.url || item.thumbnail) ? `
                     <button class="download-item-action open-btn" onclick="openDownloadedFile('${item.id}')" title="${TRANSLATIONS[currentLanguage]?.openFile || 'Open'}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -1034,20 +1036,63 @@ function renderDownloadsList() {
     });
 }
 
-function openDownloadedFile(id) {
+async function openDownloadedFile(id) {
     const downloads = getDownloadsHistory();
     const item = downloads.find(i => i.id === id);
-    if (item && item.filePath) {
-        // On Android/Capacitor, we'll use a native file opener
-        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-            // Use FileOpener plugin if available
-            console.log('Opening file:', item.filePath);
-            alert('File: ' + item.filePath);
-        } else {
-            // On web, open URL
-            if (item.url) {
-                window.open(item.url, '_blank');
+    
+    if (!item) {
+        console.error('Download item not found:', id);
+        return;
+    }
+    
+    // On Android/Capacitor, use the FileOpener plugin
+    if (isCapacitor && FileOpener) {
+        try {
+            // If we have a file path, open it with system app
+            if (item.filePath) {
+                // Determine MIME type based on download type
+                let mimeType = '*/*';
+                if (item.type === 'video' || item.type === 'playlist') {
+                    mimeType = 'video/*';
+                } else if (item.type === 'thumbnail') {
+                    mimeType = 'image/*';
+                }
+                
+                console.log('Opening file:', item.filePath, 'with MIME:', mimeType);
+                
+                const result = await FileOpener.openFile({
+                    path: item.filePath,
+                    mimeType: mimeType
+                });
+                
+                console.log('File opened:', result);
+            } else if (item.url) {
+                // No file path, open URL in browser/app
+                console.log('Opening URL:', item.url);
+                await FileOpener.openUrl({ url: item.url });
             }
+        } catch (error) {
+            console.error('Error opening file:', error);
+            // Fallback: try opening URL if available
+            if (item.url) {
+                try {
+                    await FileOpener.openUrl({ url: item.url });
+                } catch (urlError) {
+                    console.error('Error opening URL:', urlError);
+                    alert('Could not open file. Error: ' + (error.message || 'Unknown error'));
+                }
+            } else {
+                alert('Could not open file. Error: ' + (error.message || 'Unknown error'));
+            }
+        }
+    } else {
+        // On web, open URL in new tab
+        if (item.url) {
+            window.open(item.url, '_blank');
+        } else if (item.thumbnail) {
+            window.open(item.thumbnail, '_blank');
+        } else {
+            alert('No URL available for this download');
         }
     }
 }
