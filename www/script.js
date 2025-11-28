@@ -135,7 +135,21 @@ const TRANSLATIONS = {
         errorEnterUrl: 'Please enter a video URL',
         errorValidUrl: 'Please enter a valid URL',
         errorBlocked: 'This website is not supported due to content policy restrictions.',
-        errorFetchFailed: 'Failed to fetch video info. Make sure the backend server is running.'
+        errorFetchFailed: 'Failed to fetch video info. Make sure the backend server is running.',
+        // Downloads page translations
+        downloads: 'Downloads',
+        allDownloads: 'All',
+        videos: 'Videos',
+        thumbnails: 'Thumbnails',
+        playlists: 'Playlists',
+        totalDownloads: 'Total Downloads',
+        totalSize: 'Total Size',
+        clearAll: 'Clear All',
+        noDownloads: 'No Downloads Yet',
+        noDownloadsDesc: 'Your downloaded videos, thumbnails and playlists will appear here',
+        startDownloading: 'Start Downloading',
+        deleteDownload: 'Delete',
+        openFile: 'Open File'
     },
     ur: {
         tagline: 'یونیورسل ویڈیو ڈاؤنلوڈر',
@@ -199,7 +213,21 @@ const TRANSLATIONS = {
         errorEnterUrl: 'براہ کرم ویڈیو URL درج کریں',
         errorValidUrl: 'براہ کرم درست URL درج کریں',
         errorBlocked: 'مواد کی پالیسی کی پابندیوں کی وجہ سے یہ ویب سائٹ معاون نہیں ہے۔',
-        errorFetchFailed: 'ویڈیو انفو حاصل کرنے میں ناکام۔ یقینی بنائیں کہ بیک اینڈ سرور چل رہا ہے۔'
+        errorFetchFailed: 'ویڈیو انفو حاصل کرنے میں ناکام۔ یقینی بنائیں کہ بیک اینڈ سرور چل رہا ہے۔',
+        // Downloads page translations
+        downloads: 'ڈاؤنلوڈز',
+        allDownloads: 'سب',
+        videos: 'ویڈیوز',
+        thumbnails: 'تھمب نیلز',
+        playlists: 'پلے لسٹس',
+        totalDownloads: 'کل ڈاؤنلوڈز',
+        totalSize: 'کل سائز',
+        clearAll: 'سب صاف کریں',
+        noDownloads: 'ابھی تک کوئی ڈاؤنلوڈ نہیں',
+        noDownloadsDesc: 'آپ کی ڈاؤنلوڈ شدہ ویڈیوز، تھمب نیلز اور پلے لسٹس یہاں دکھائی دیں گی',
+        startDownloading: 'ڈاؤنلوڈ شروع کریں',
+        deleteDownload: 'حذف کریں',
+        openFile: 'فائل کھولیں'
     },
     hi: {
         tagline: 'यूनिवर्सल वीडियो डाउनलोडर',
@@ -263,7 +291,21 @@ const TRANSLATIONS = {
         errorEnterUrl: 'कृपया वीडियो URL दर्ज करें',
         errorValidUrl: 'कृपया एक वैध URL दर्ज करें',
         errorBlocked: 'सामग्री नीति प्रतिबंधों के कारण यह वेबसाइट समर्थित नहीं है।',
-        errorFetchFailed: 'वीडियो इंफो प्राप्त करने में विफल। सुनिश्चित करें कि बैकएंड सर्वर चल रहा है।'
+        errorFetchFailed: 'वीडियो इंफो प्राप्त करने में विफल। सुनिश्चित करें कि बैकएंड सर्वर चल रहा है।',
+        // Downloads page translations
+        downloads: 'डाउनलोड्स',
+        allDownloads: 'सभी',
+        videos: 'वीडियोज़',
+        thumbnails: 'थंबनेल्स',
+        playlists: 'प्लेलिस्ट्स',
+        totalDownloads: 'कुल डाउनलोड्स',
+        totalSize: 'कुल साइज',
+        clearAll: 'सब साफ़ करें',
+        noDownloads: 'अभी तक कोई डाउनलोड नहीं',
+        noDownloadsDesc: 'आपके डाउनलोड किए गए वीडियो, थंबनेल और प्लेलिस्ट यहां दिखाई देंगे',
+        startDownloading: 'डाउनलोड शुरू करें',
+        deleteDownload: 'हटाएं',
+        openFile: 'फाइल खोलें'
     },
     hinglish: {
         tagline: 'Universal Video Downloader',
@@ -327,7 +369,21 @@ const TRANSLATIONS = {
         errorEnterUrl: 'Please video URL daalo',
         errorValidUrl: 'Please sahi URL daalo',
         errorBlocked: 'Content policy restrictions ki wajah se yeh website supported nahi hai.',
-        errorFetchFailed: 'Video info fetch nahi ho paayi. Check karo ki backend server chal raha hai.'
+        errorFetchFailed: 'Video info fetch nahi ho paayi. Check karo ki backend server chal raha hai.',
+        // Downloads page translations
+        downloads: 'Downloads',
+        allDownloads: 'Sab',
+        videos: 'Videos',
+        thumbnails: 'Thumbnails',
+        playlists: 'Playlists',
+        totalDownloads: 'Total Downloads',
+        totalSize: 'Total Size',
+        clearAll: 'Sab Clear Karo',
+        noDownloads: 'Abhi Tak Koi Download Nahi',
+        noDownloadsDesc: 'Tumhare download kiye gaye videos, thumbnails aur playlists yahan dikhenge',
+        startDownloading: 'Download Shuru Karo',
+        deleteDownload: 'Delete Karo',
+        openFile: 'File Kholo'
     }
 };
 
@@ -508,6 +564,72 @@ let currentPlatform = null;
 let currentVideoInfo = null;
 let selectedVideoFormat = null;
 let downloadController = null;
+let currentFilter = 'all';
+
+// ===========================
+// Downloads History Storage
+// ===========================
+const DOWNLOADS_STORAGE_KEY = 'aquaseal-downloads';
+
+function getDownloadsHistory() {
+    try {
+        const data = localStorage.getItem(DOWNLOADS_STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        console.error('Error reading downloads history:', e);
+        return [];
+    }
+}
+
+function saveDownloadsHistory(downloads) {
+    try {
+        localStorage.setItem(DOWNLOADS_STORAGE_KEY, JSON.stringify(downloads));
+        updateDownloadsBadge();
+    } catch (e) {
+        console.error('Error saving downloads history:', e);
+    }
+}
+
+function addToDownloadsHistory(item) {
+    const downloads = getDownloadsHistory();
+    // Add new item at the beginning
+    downloads.unshift({
+        id: Date.now(),
+        ...item,
+        downloadedAt: new Date().toISOString()
+    });
+    // Keep only last 100 downloads
+    if (downloads.length > 100) {
+        downloads.pop();
+    }
+    saveDownloadsHistory(downloads);
+    return downloads;
+}
+
+function removeFromDownloadsHistory(id) {
+    const downloads = getDownloadsHistory();
+    const filtered = downloads.filter(d => d.id !== id);
+    saveDownloadsHistory(filtered);
+    return filtered;
+}
+
+function clearDownloadsHistory() {
+    saveDownloadsHistory([]);
+}
+
+function updateDownloadsBadge() {
+    const downloads = getDownloadsHistory();
+    const count = downloads.length;
+    
+    if (downloadBadge) {
+        if (count > 0) {
+            downloadBadge.textContent = count > 99 ? '99+' : count;
+            downloadBadge.classList.remove('hidden');
+        } else {
+            downloadBadge.classList.add('hidden');
+        }
+    }
+}
 
 // ===========================
 // DOM Elements
@@ -516,18 +638,31 @@ const platformPage = document.getElementById('platform-page');
 const sitesPage = document.getElementById('sites-page');
 const tutorialPage = document.getElementById('tutorial-page');
 const downloadPage = document.getElementById('download-page');
+const downloadsPage = document.getElementById('downloads-page');
 
 const platformCards = document.querySelectorAll('.platform-card');
 const viewAllSitesBtn = document.getElementById('view-all-sites-btn');
 const sitesBackBtn = document.getElementById('sites-back-btn');
 const tutorialBackBtn = document.getElementById('tutorial-back-btn');
 const downloadBackBtn = document.getElementById('download-back-btn');
+const downloadsBackBtn = document.getElementById('downloads-back-btn');
 const logoHome = document.getElementById('logo-home');
 const tutorialBtn = document.getElementById('tutorial-btn');
+const downloadsBtn = document.getElementById('downloads-btn');
+const downloadBadge = document.getElementById('download-badge');
 const languageBtn = document.getElementById('language-btn');
 const languageModal = document.getElementById('language-modal');
 const languageModalClose = document.getElementById('language-modal-close');
 const languageOptions = document.querySelectorAll('.language-option');
+
+// Downloads page elements
+const downloadsList = document.getElementById('downloads-list');
+const downloadsEmpty = document.getElementById('downloads-empty');
+const clearDownloadsBtn = document.getElementById('clear-downloads-btn');
+const startDownloadingBtn = document.getElementById('start-downloading-btn');
+const totalDownloadsCount = document.getElementById('total-downloads-count');
+const totalDownloadsSize = document.getElementById('total-downloads-size');
+const filterBtns = document.querySelectorAll('.filter-btn');
 
 const sitesSearchInput = document.getElementById('sites-search-input');
 const sitesList = document.getElementById('sites-list');
@@ -614,6 +749,11 @@ function goToTutorialPage() {
     showPage('tutorial-page');
 }
 
+function goToDownloadsPage() {
+    showPage('downloads-page');
+    renderDownloadsList();
+}
+
 function goToDownloadPage(platform) {
     currentPlatform = platform;
     const config = PLATFORMS[platform];
@@ -674,6 +814,39 @@ logoHome.addEventListener('click', goToPlatformPage);
 
 // Tutorial button
 tutorialBtn.addEventListener('click', goToTutorialPage);
+
+// Downloads button
+if (downloadsBtn) {
+    downloadsBtn.addEventListener('click', goToDownloadsPage);
+}
+if (downloadsBackBtn) {
+    downloadsBackBtn.addEventListener('click', goToPlatformPage);
+}
+
+// Downloads filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        filterDownloads(filter);
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+// Clear all downloads button
+if (clearDownloadsBtn) {
+    clearDownloadsBtn.addEventListener('click', () => {
+        if (confirm(TRANSLATIONS[currentLanguage]?.clearAll || 'Clear all downloads?')) {
+            clearDownloadsHistory();
+            renderDownloadsList();
+        }
+    });
+}
+
+// Start downloading button (in empty state)
+if (startDownloadingBtn) {
+    startDownloadingBtn.addEventListener('click', goToPlatformPage);
+}
 
 // Language button and modal
 languageBtn.addEventListener('click', () => {
@@ -769,6 +942,119 @@ function populateSitesList(filter = '') {
 function filterSites() {
     const filter = sitesSearchInput.value;
     populateSitesList(filter);
+}
+
+// ===========================
+// Downloads Page Functions
+// ===========================
+let currentDownloadsFilter = 'all';
+
+function filterDownloads(filter) {
+    currentDownloadsFilter = filter;
+    renderDownloadsList();
+}
+
+function renderDownloadsList() {
+    if (!downloadsList) return;
+    
+    downloadsList.innerHTML = '';
+    
+    const downloads = getDownloadsHistory();
+    let filteredHistory = downloads;
+    
+    if (currentDownloadsFilter !== 'all') {
+        filteredHistory = downloads.filter(item => {
+            if (currentDownloadsFilter === 'video') return item.type === 'video';
+            if (currentDownloadsFilter === 'thumbnail') return item.type === 'thumbnail';
+            if (currentDownloadsFilter === 'playlist') return item.type === 'playlist';
+            return true;
+        });
+    }
+    
+    if (filteredHistory.length === 0) {
+        if (downloadsEmpty) downloadsEmpty.style.display = 'flex';
+        if (clearDownloadsBtn) clearDownloadsBtn.style.display = 'none';
+        return;
+    }
+    
+    if (downloadsEmpty) downloadsEmpty.style.display = 'none';
+    if (clearDownloadsBtn) clearDownloadsBtn.style.display = 'flex';
+    
+    filteredHistory.forEach(item => {
+        const downloadItem = document.createElement('div');
+        downloadItem.className = 'download-item';
+        
+        const typeIcon = item.type === 'video' ? '🎬' : 
+                         item.type === 'thumbnail' ? '🖼️' : '📁';
+        const typeClass = item.type || 'video';
+        
+        const formattedDate = new Date(item.downloadedAt || item.timestamp).toLocaleDateString(undefined, {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        downloadItem.innerHTML = `
+            <div class="download-item-thumb">
+                ${item.thumbnail ? 
+                    `<img src="${item.thumbnail}" alt="${item.title || 'Download'}" onerror="this.parentElement.innerHTML='<div class=\\'thumb-placeholder\\'>${typeIcon}</div>'">` :
+                    `<div class="thumb-placeholder">${typeIcon}</div>`
+                }
+                <span class="download-item-type ${typeClass}">${item.type || 'video'}</span>
+            </div>
+            <div class="download-item-info">
+                <div class="download-item-title">${item.title || 'Downloaded Item'}</div>
+                <div class="download-item-meta">
+                    ${item.quality ? `<span>${item.quality}</span>` : ''}
+                    <span>${formattedDate}</span>
+                    ${item.size ? `<span>${item.size}</span>` : ''}
+                </div>
+            </div>
+            <div class="download-item-actions">
+                ${item.filePath ? `
+                    <button class="download-item-action open-btn" onclick="openDownloadedFile('${item.id}')" title="${TRANSLATIONS[currentLanguage]?.openFile || 'Open'}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                    </button>
+                ` : ''}
+                <button class="download-item-action delete" onclick="deleteDownloadItem('${item.id}')" title="${TRANSLATIONS[currentLanguage]?.deleteDownload || 'Delete'}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                </button>
+            </div>
+        `;
+        
+        downloadsList.appendChild(downloadItem);
+    });
+}
+
+function openDownloadedFile(id) {
+    const downloads = getDownloadsHistory();
+    const item = downloads.find(i => i.id === id);
+    if (item && item.filePath) {
+        // On Android/Capacitor, we'll use a native file opener
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+            // Use FileOpener plugin if available
+            console.log('Opening file:', item.filePath);
+            alert('File: ' + item.filePath);
+        } else {
+            // On web, open URL
+            if (item.url) {
+                window.open(item.url, '_blank');
+            }
+        }
+    }
+}
+
+function deleteDownloadItem(id) {
+    removeFromDownloadsHistory(id);
+    renderDownloadsList();
 }
 
 // ===========================
@@ -936,6 +1222,18 @@ async function handleDownload() {
             progressSpeed.textContent = 'Complete!';
             downloadVideoBtn.querySelector('span').textContent = 'Downloaded! ✓';
             
+            // Add to download history
+            addToDownloadsHistory({
+                title: currentVideoInfo.title || 'Video',
+                thumbnail: currentVideoInfo.thumbnail || '',
+                type: 'video',
+                platform: currentPlatform,
+                quality: selectedVideoFormat || 'best',
+                url: url,
+                filePath: result.filename || '',
+                size: result.size || ''
+            });
+            
             // Show success message with file location
             if (result.filename) {
                 progressSize.textContent = 'Saved to Downloads folder';
@@ -1055,6 +1353,17 @@ async function handleDownload() {
         URL.revokeObjectURL(blobUrl);
         document.body.removeChild(a);
         
+        // Add to download history
+        addToDownloadsHistory({
+            title: currentVideoInfo.title || 'Video',
+            thumbnail: currentVideoInfo.thumbnail || '',
+            type: 'video',
+            platform: currentPlatform,
+            quality: selectedVideoFormat || 'best',
+            url: url,
+            size: formatFilesize(blob.size)
+        });
+        
         downloadVideoBtn.querySelector('span').textContent = 'Downloaded! ✓';
         
         setTimeout(() => {
@@ -1111,6 +1420,16 @@ async function handleDownloadThumbnail() {
                 throw new Error(result.error);
             }
             
+            // Add to download history
+            addToDownloadsHistory({
+                title: currentVideoInfo.title || 'Thumbnail',
+                thumbnail: currentVideoInfo.thumbnail,
+                type: 'thumbnail',
+                platform: currentPlatform,
+                url: currentVideoInfo.thumbnail,
+                filePath: result.filename || ''
+            });
+            
             // Show success
             alert('Thumbnail saved to Pictures folder!');
             return;
@@ -1149,6 +1468,15 @@ async function handleDownloadThumbnail() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(downloadUrl);
+        
+        // Add to download history
+        addToDownloadsHistory({
+            title: currentVideoInfo.title || 'Thumbnail',
+            thumbnail: currentVideoInfo.thumbnail,
+            type: 'thumbnail',
+            platform: currentPlatform,
+            url: currentVideoInfo.thumbnail
+        });
         
     } catch (error) {
         console.error('Thumbnail download error:', error);
@@ -1358,6 +1686,17 @@ async function downloadPlaylistVideo(videoUrl, videoTitle, quality = 'best', ite
                 throw new Error(result.error);
             }
             
+            // Add to download history
+            addToDownloadsHistory({
+                title: videoTitle || 'Playlist Video',
+                thumbnail: '',
+                type: 'playlist',
+                platform: currentPlatform,
+                quality: quality,
+                url: videoUrl,
+                filePath: result.filename || ''
+            });
+            
             if (itemElement) {
                 itemElement.classList.remove('downloading');
                 itemElement.classList.add('downloaded');
@@ -1400,6 +1739,17 @@ async function downloadPlaylistVideo(videoUrl, videoTitle, quality = 'best', ite
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(downloadUrl);
+        
+        // Add to download history
+        addToDownloadsHistory({
+            title: videoTitle || 'Playlist Video',
+            thumbnail: '',
+            type: 'playlist',
+            platform: currentPlatform,
+            quality: quality,
+            url: videoUrl,
+            size: formatFilesize(blob.size)
+        });
         
         if (itemElement) {
             itemElement.classList.remove('downloading');
@@ -1687,4 +2037,6 @@ window.addEventListener('load', () => {
     showPage('platform-page');
     // Apply saved language or default to English
     setLanguage(currentLanguage);
+    // Update downloads badge count
+    updateDownloadsBadge();
 });
