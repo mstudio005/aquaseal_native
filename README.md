@@ -1,179 +1,54 @@
-# AquaSeal - YouTube Downloader
 
-A modern, beautiful YouTube thumbnail and video downloader with zero cost.
+AquaSeal
 
-## 📁 Project Structure
+AquaSeal is a self-contained, offline-capable Android app (Capacitor + Chaquopy) for downloading videos, playlists and thumbnails from YouTube and many other platforms. The app bundles an embedded Python runtime and yt-dlp so it can run entirely on-device with no external servers.
 
-```
-aquaseal/
-├── index.html          # Frontend UI
-├── style.css           # Styling
-├── script.js           # Frontend logic
-├── manifest.json       # PWA manifest
-├── icon-192.png        # App icon
-├── icon-512.png        # App icon
-└── backend/            # Node.js backend
-    ├── package.json
-    ├── server.js       # Express + yt-dlp server
-    └── README.md
-```
+## Highlights
 
-## 🚀 Quick Start
+- Fully self-contained Android APK (embedded Python + yt-dlp)
+- Multi-language UI (English, Urdu, Hindi, Hinglish)
+- Downloads page with history, filters, and open/delete actions
+- Uses Chaquopy to run Python code on Android and yt-dlp for downloading
 
-### 1. Install Backend Dependencies
+This repository contains the full web UI (under `www/`) and the Android project (under `android/`).
 
-```bash
-cd backend
-npm install
-```
+## Quick start
 
-This will install:
-- Express (web server)
-- CORS (cross-origin requests)
-- yt-dlp-exec (YouTube downloader - completely free!)
+Requirements
 
-### 2. Start the Backend Server
+- Java JDK 21
+- Android SDK (platforms + build-tools)
+- Node.js + npm (for Capacitor CLI)
 
-```bash
-npm start
+Build and install (debug)
+
+```powershell
+# from project root
+npx cap sync android
+cd android
+.\gradlew.bat assembleDebug
+# Install the generated APK on a device/emulator:
+adb install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
-The server will run on `http://localhost:3000`
+Notes
 
-###3. Open the Frontend
+- The app bundles Python via Chaquopy and yt-dlp as a pip dependency. This makes the APK larger but fully self-contained.
+- Downloads are saved to the device (Downloads or Pictures folders depending on type).
 
-Simply open `index.html` in your browser (or use Live Server in VS Code).
+## Development
 
-## ✨ Features
+- UI files are in `www/` — edit `index.html`, `style.css`, `script.js` and re-run `npx cap sync android`.
+- Android plugins are under `android/app/src/main/java/...`.
 
-- 🖼️ **Thumbnail Downloads**: Get YouTube thumbnails in multiple qualities
-- 🎥 **Video Downloads**: Download YouTube videos in various qualities
-- 🎨 **Modern UI**: Beautiful glassmorphism design with smooth animations
-- ⚡ **Fast**: Instant downloads with streaming support
-- 🔒 **Privacy**: Everything runs locally, no external APIs
-- 💰 **Zero Cost**: Completely free, uses open-source yt-dlp
-- 📱 **PWA Ready**: Can be installed as an app
-- 🐳 **Easy to Containerize**: Ready for Docker deployment
+## Contributing
 
-## 🎯 How to Use
+See `CONTRIBUTING.md` for contribution guidelines.
 
-1. Start the backend server (`cd backend && npm start`)
-2. Open `index.html` in your browser
-3. Choose mode: Thumbnail or Video
-4. Paste a YouTube URL
-5. Click "Get Thumbnail" or "Get Video Info"
-6. Select quality and download!
+## License
 
-## 🔧 API Endpoints
+This project is released under the GNU General Public License v3.0. See `LICENSE`.
 
-The backend provides these endpoints:
+## Credits
 
-- `GET /api/health` - Check if server is running
-- `POST /api/video-info` - Get video metadata and available formats
-- `POST /api/download` - Download video in selected quality
-
-## 📦 Converting to Mobile App
-
-When ready to convert to a mobile app:
-
-### Using Capacitor (Recommended)
-
-```bash
-# Install Capacitor
-npm install @capacitor/core @capacitor/cli
-
-# Initialize Capacitor
-npx cap init AquaSeal com.aquaseal.app
-
-# Add platforms
-npx cap add android
-npx cap add ios
-
-# Build and sync
-npx cap sync
-```
-
-The backend can run as:
-1. **Remote API**: Deploy to any cloud provider (Heroku, Railway, etc.)
-2. **Local Service**: Package with the app using Capacitor plugins
-
-### Using Electron (Desktop App)
-
-```bash
-npm install electron electron-builder
-```
-
-Package both frontend and backend together.
-
-## 🐳 Docker Deployment
-
-Create a `Dockerfile`:
-
-```dockerfile
-FROM node:18-alpine
-
-# Install yt-dlp dependencies
-RUN apk add --no-cache python3 ffmpeg
-
-WORKDIR /app
-
-# Copy backend
-COPY backend/package*.json ./backend/
-RUN cd backend && npm install
-
-COPY backend/ ./backend/
-COPY index.html style.css script.js manifest.json ./
-
-EXPOSE 3000
-
-CMD ["node", "backend/server.js"]
-```
-
-Build and run:
-```bash
-docker build -t aquaseal .
-docker run -p 3000:3000 aquaseal
-```
-
-## 🛠️ Technologies Used
-
-- **Frontend**: HTML5, CSS3 (Glassmorphism), Vanilla JavaScript
-- **Backend**: Node.js, Express
-- **Downloader**: yt-dlp (open-source, most reliable YouTube downloader)
-- **Fonts**: Google Fonts (Inter)
-- **Icons**: Custom SVG icons
-
-## 🎨 Design Features
-
-- Dark theme with aqua/teal branding
-- Glassmorphism card effects
-- Smooth animations and transitions
-- Floating gradient orbs background
-- Responsive design (mobile, tablet, desktop)
-- Modern typography
-- Interactive hover effects
-
-## 📝 Notes
-
-- Backend must be running for video downloads
-- Thumbnail downloads work without backend (direct from YouTube)
-- yt-dlp is automatically installed with `npm install`
-- CORS is enabled for local development
-- Videos are streamed directly to avoid memory issues
-
-## 🔮 Future Enhancements
-
-- Playlist download support
-- Audio-only downloads
-- Format conversion
-- Download queue
-- History of downloads
-- Dark/Light theme toggle
-
-## 📄 License
-
-MIT License - Feel free to use for personal or commercial projects!
-
----
-
-**Made with ❤️ using modern web technologies**
+- Built with Capacitor, Chaquopy and yt-dlp.
