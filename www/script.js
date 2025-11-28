@@ -3,28 +3,18 @@
 // Platform-based Video Downloader
 // ===========================
 
-const API_BASE_URL = 'http://localhost:3000/api';
+// Cobalt API - Free, Open Source video download API
+// No server needed! Works directly from the app
+const COBALT_API_URL = 'https://api.cobalt.tools';
 
-// Check if running in native Android app
-const isNativeApp = typeof AquaSeal !== 'undefined';
+// Fallback APIs in case main is down
+const COBALT_INSTANCES = [
+    'https://api.cobalt.tools',
+    'https://cobalt-api.kwiatekmiki.com',
+    'https://cobalt.canine.tools'
+];
 
-// Native callback handler
-const nativeCallbacks = {};
-let nativeCallbackId = 0;
-
-function createNativeCallback(callback) {
-    const id = 'cb_' + (nativeCallbackId++);
-    nativeCallbacks[id] = callback;
-    return `nativeCallbacks['${id}']`;
-}
-
-// Handle shared URLs from Android
-function handleSharedUrl(url) {
-    if (url && urlInput) {
-        urlInput.value = url;
-        handleSearch();
-    }
-}
+let currentCobaltInstance = 0;
 
 // ===========================
 // Multi-Language Support
@@ -735,6 +725,43 @@ function isPlaylistUrl(url) {
     return url.includes('list=') || url.includes('/playlist');
 }
 
+// Get the current working cobalt instance
+function getCobaltInstance() {
+    return COBALT_INSTANCES[currentCobaltInstance];
+}
+
+// Try next cobalt instance if current fails
+function tryNextCobaltInstance() {
+    currentCobaltInstance = (currentCobaltInstance + 1) % COBALT_INSTANCES.length;
+    return getCobaltInstance();
+}
+
+// Fetch video info using Cobalt API
+async function fetchFromCobalt(url, quality = '1080') {
+    const instance = getCobaltInstance();
+    
+    const response = await fetch(instance, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            url: url,
+            videoQuality: quality,
+            audioFormat: 'mp3',
+            filenameStyle: 'pretty',
+            downloadMode: 'auto'
+        })
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Cobalt API error: ${response.status}`);
+    }
+    
+    return await response.json();
+}
+
 async function handleFetchVideoInfo() {
     const url = urlInput.value.trim();
     
@@ -759,68 +786,97 @@ async function handleFetchVideoInfo() {
     hideVideoSection();
     hidePlaylistSection();
     
-    // Check if it's a playlist URL (YouTube only)
-    if (currentPlatform === 'youtube' && isPlaylistUrl(url)) {
-        await handleFetchPlaylistInfo(url);
-        return;
-    }
-    
-    showLoading(`Fetching ${PLATFORMS[currentPlatform].name} video info...`);
+    showLoading(`Fetching ${PLATFORMS[currentPlatform]?.name || 'video'} info...`);
     
     try {
-        let videoInfo;
+        // Try fetching with different qualities to get available options
+        const qualities = ['1080', '720', '480', '360'];
+        let videoData = null;
+        let retries = 0;
+        const maxRetries = COBALT_INSTANCES.length;
         
-        if (isNativeApp) {
-            // Use native Android bridge
-            videoInfo = await new Promise((resolve, reject) => {
-                const callbackName = createNativeCallback((result) => {
-                    if (result.error) {
-                        reject(new Error(result.error));
-                    } else {
-                        resolve(result);
-                    }
-                });
-                AquaSeal.getVideoInfo(url, callbackName);
-            });
-        } else {
-            // Use HTTP API
-            const response = await fetch(`${API_BASE_URL}/video-info`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url })
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || 'Failed to fetch video information');
+        while (retries < maxRetries) {
+            try {
+                videoData = await fetchFromCobalt(url, '1080');
+                break;
+            } catch (err) {
+                console.log(`Instance ${getCobaltInstance()} failed, trying next...`);
+                tryNextCobaltInstance();
+                retries++;
             }
-            
-            videoInfo = await response.json();
         }
         
-        currentVideoInfo = videoInfo;
-        currentVideoInfo.url = url; // Store the URL for video player
+        if (!videoData) {
+            throw new Error('All API instances failed');
+        }
         
-        // Update UI - handle thumbnail with fallback
-        if (videoInfo.thumbnail) {
-            videoThumbnail.src = videoInfo.thumbnail;
+        // Check for error in response
+        if (videoData.status === 'error') {
+            throw new Error(videoData.error?.code || 'Failed to process video');
+        }
+        
+        // Build video info object
+        currentVideoInfo = {
+            url: url,
+            title: extractTitleFromUrl(url),
+            channel: PLATFORMS[currentPlatform]?.name || 'Video',
+            thumbnail: videoData.thumbnail || null,
+            duration: null,
+            cobaltData: videoData,
+            formats: []
+        };
+        
+        // Create quality options based on cobalt response
+        if (videoData.status === 'tunnel' || videoData.status === 'redirect') {
+            // Single quality available
+            currentVideoInfo.formats = [{
+                formatId: 'best',
+                quality: 'Best Quality',
+                ext: 'mp4',
+                url: videoData.url
+            }];
+        } else if (videoData.status === 'picker') {
+            // Multiple options available (like audio + video separately)
+            currentVideoInfo.formats = videoData.picker.map((item, index) => ({
+                formatId: `option_${index}`,
+                quality: item.type === 'video' ? 'Video' : 'Audio',
+                ext: item.type === 'video' ? 'mp4' : 'mp3',
+                url: item.url,
+                thumb: item.thumb
+            }));
+        }
+        
+        // Add quality options
+        const defaultQualities = [
+            { formatId: '1080', quality: '1080p HD', ext: 'mp4' },
+            { formatId: '720', quality: '720p HD', ext: 'mp4' },
+            { formatId: '480', quality: '480p SD', ext: 'mp4' },
+            { formatId: '360', quality: '360p', ext: 'mp4' },
+            { formatId: 'audio', quality: 'Audio Only', ext: 'mp3' }
+        ];
+        
+        if (currentVideoInfo.formats.length === 0) {
+            currentVideoInfo.formats = defaultQualities;
+        }
+        
+        // Update UI
+        if (currentVideoInfo.thumbnail) {
+            videoThumbnail.src = currentVideoInfo.thumbnail;
             videoThumbnail.style.display = 'block';
             if (thumbnailPlaceholder) thumbnailPlaceholder.style.display = 'none';
-            // Show thumbnail download button for YouTube
-            if (currentPlatform === 'youtube' && downloadThumbnailBtn) {
-                downloadThumbnailBtn.classList.remove('hidden');
-            }
+            if (downloadThumbnailBtn) downloadThumbnailBtn.classList.remove('hidden');
         } else {
             videoThumbnail.style.display = 'none';
             if (thumbnailPlaceholder) thumbnailPlaceholder.style.display = 'flex';
             if (downloadThumbnailBtn) downloadThumbnailBtn.classList.add('hidden');
         }
-        videoTitle.textContent = videoInfo.title || 'Unknown Title';
-        videoChannel.textContent = `${PLATFORMS[currentPlatform].name} • ${videoInfo.channel || 'Unknown'}`;
-        videoDuration.textContent = formatDuration(videoInfo.duration);
+        
+        videoTitle.textContent = currentVideoInfo.title || 'Video';
+        videoChannel.textContent = `${PLATFORMS[currentPlatform]?.name || 'Video'} • Ready to download`;
+        videoDuration.textContent = '';
         
         // Populate quality options
-        populateQualityOptions(videoInfo.formats || []);
+        populateQualityOptions(currentVideoInfo.formats);
         
         hideLoading();
         showVideoSection();
@@ -828,7 +884,45 @@ async function handleFetchVideoInfo() {
     } catch (error) {
         console.error('Error:', error);
         hideLoading();
-        showError('Failed to fetch video info. Make sure the backend server is running.');
+        
+        let errorMsg = 'Failed to fetch video info. ';
+        if (error.message.includes('content.video.live')) {
+            errorMsg = 'Live videos are not supported.';
+        } else if (error.message.includes('content.video.unavailable')) {
+            errorMsg = 'This video is unavailable or private.';
+        } else if (error.message.includes('link')) {
+            errorMsg = 'Invalid or unsupported link.';
+        } else {
+            errorMsg += 'Please check the URL and try again.';
+        }
+        
+        showError(errorMsg);
+    }
+}
+
+// Extract a readable title from URL
+function extractTitleFromUrl(url) {
+    try {
+        const urlObj = new URL(url);
+        const hostname = urlObj.hostname.replace('www.', '');
+        
+        // Try to get video ID or path for title
+        if (hostname.includes('youtube') || hostname.includes('youtu.be')) {
+            const videoId = urlObj.searchParams.get('v') || urlObj.pathname.split('/').pop();
+            return `YouTube Video (${videoId})`;
+        } else if (hostname.includes('instagram')) {
+            return 'Instagram Video';
+        } else if (hostname.includes('tiktok')) {
+            return 'TikTok Video';
+        } else if (hostname.includes('twitter') || hostname.includes('x.com')) {
+            return 'Twitter/X Video';
+        } else if (hostname.includes('facebook') || hostname.includes('fb.')) {
+            return 'Facebook Video';
+        }
+        
+        return `Video from ${hostname}`;
+    } catch {
+        return 'Video';
     }
 }
 
@@ -889,85 +983,65 @@ async function handleDownload() {
     if (!currentVideoInfo) return;
     
     const url = urlInput.value.trim();
-    
-    // Use native download for Android app
-    if (isNativeApp) {
-        downloadVideoBtn.disabled = true;
-        downloadVideoBtn.querySelector('span').textContent = 'Downloading...';
-        downloadProgress.classList.remove('hidden');
-        progressBarFill.style.width = '50%';
-        progressPercentage.textContent = 'Processing...';
-        
-        try {
-            const result = await new Promise((resolve, reject) => {
-                const callbackName = createNativeCallback((result) => {
-                    if (result.error) {
-                        reject(new Error(result.error));
-                    } else {
-                        resolve(result);
-                    }
-                });
-                AquaSeal.downloadVideo(url, selectedVideoFormat || 'best', callbackName);
-            });
-            
-            progressBarFill.style.width = '100%';
-            progressPercentage.textContent = '100%';
-            progressSpeed.textContent = 'Complete!';
-            downloadVideoBtn.querySelector('span').textContent = 'Downloaded! ✓';
-            
-            if (typeof AquaSeal.showToast === 'function') {
-                AquaSeal.showToast(result.message || 'Download complete!');
-            }
-            
-            setTimeout(() => {
-                downloadVideoBtn.querySelector('span').textContent = 'Download Video';
-                downloadVideoBtn.disabled = false;
-                downloadProgress.classList.add('hidden');
-            }, 3000);
-            
-        } catch (error) {
-            console.error('Download error:', error);
-            showError('Download failed: ' + error.message);
-            downloadVideoBtn.querySelector('span').textContent = 'Download Video';
-            downloadVideoBtn.disabled = false;
-            downloadProgress.classList.add('hidden');
-        }
-        return;
-    }
-    
-    // Web/Server-based download
     downloadController = new AbortController();
     
     // Update UI
     downloadVideoBtn.disabled = true;
-    downloadVideoBtn.querySelector('span').textContent = 'Starting...';
+    downloadVideoBtn.querySelector('span').textContent = 'Processing...';
     stopDownloadBtn.classList.remove('hidden');
     
     // Show progress
     downloadProgress.classList.remove('hidden');
     progressBarFill.style.width = '0%';
     progressPercentage.textContent = '0%';
-    progressSize.textContent = '0 MB / 0 MB';
-    progressSpeed.textContent = '0 KB/s';
-    
-    const startTime = Date.now();
-    
-    // Get expected size
-    let expectedSize = 0;
-    if (currentVideoInfo.formats) {
-        const format = currentVideoInfo.formats.find(f => f.formatId === selectedVideoFormat);
-        if (format?.filesize) expectedSize = format.filesize;
-    }
+    progressSize.textContent = 'Preparing download...';
+    progressSpeed.textContent = '';
     
     try {
-        const response = await fetch(`${API_BASE_URL}/download`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                url,
-                formatId: selectedVideoFormat,
-                expectedSize
-            }),
+        // Determine quality to request
+        let quality = '1080';
+        if (selectedVideoFormat === 'audio') {
+            quality = '128'; // Audio quality
+        } else if (['720', '480', '360'].includes(selectedVideoFormat)) {
+            quality = selectedVideoFormat;
+        }
+        
+        // Check if we already have a direct URL from picker
+        let downloadUrl = null;
+        const selectedFormat = currentVideoInfo.formats?.find(f => f.formatId === selectedVideoFormat);
+        
+        if (selectedFormat?.url) {
+            downloadUrl = selectedFormat.url;
+        } else {
+            // Fetch new download URL with selected quality
+            downloadVideoBtn.querySelector('span').textContent = 'Getting download link...';
+            progressSize.textContent = 'Fetching download URL...';
+            
+            const cobaltResponse = await fetchFromCobalt(url, quality);
+            
+            if (cobaltResponse.status === 'error') {
+                throw new Error(cobaltResponse.error?.code || 'Download failed');
+            }
+            
+            if (cobaltResponse.status === 'redirect' || cobaltResponse.status === 'tunnel') {
+                downloadUrl = cobaltResponse.url;
+            } else if (cobaltResponse.status === 'picker' && cobaltResponse.picker?.length > 0) {
+                // Get the video option preferably
+                const videoOption = cobaltResponse.picker.find(p => p.type === 'video') || cobaltResponse.picker[0];
+                downloadUrl = videoOption.url;
+            }
+        }
+        
+        if (!downloadUrl) {
+            throw new Error('Could not get download URL');
+        }
+        
+        // Start downloading the file
+        downloadVideoBtn.querySelector('span').textContent = 'Downloading...';
+        progressSize.textContent = 'Starting download...';
+        progressBarFill.style.width = '10%';
+        
+        const response = await fetch(downloadUrl, {
             signal: downloadController.signal
         });
         
@@ -975,17 +1049,15 @@ async function handleDownload() {
         
         // Get total size
         const contentLength = response.headers.get('Content-Length');
-        const xExpectedSize = response.headers.get('X-Expected-Size');
-        let total = parseInt(contentLength || xExpectedSize || expectedSize) || 0;
-        
-        downloadVideoBtn.querySelector('span').textContent = 'Downloading...';
+        let total = parseInt(contentLength) || 0;
         
         // Stream response
         const reader = response.body.getReader();
         const chunks = [];
         let loaded = 0;
         let lastLoaded = 0;
-        let lastTime = startTime;
+        let lastTime = Date.now();
+        const startTime = Date.now();
         
         while (true) {
             const { done, value } = await reader.read();
@@ -1004,6 +1076,9 @@ async function handleDownload() {
                 progressSize.textContent = `${formatFilesize(loaded)} / ${formatFilesize(total)}`;
             } else {
                 progressSize.textContent = `${formatFilesize(loaded)} downloaded`;
+                // Estimate progress for unknown size
+                const estimatedPercent = Math.min(90, Math.round(loaded / (10 * 1024 * 1024) * 100));
+                progressBarFill.style.width = `${estimatedPercent}%`;
             }
             
             if (timeDiff >= 0.5) {
@@ -1019,12 +1094,17 @@ async function handleDownload() {
         progressPercentage.textContent = '100%';
         progressSpeed.textContent = 'Complete!';
         
+        // Determine file extension
+        const isAudio = selectedVideoFormat === 'audio';
+        const ext = isAudio ? 'mp3' : 'mp4';
+        const mimeType = isAudio ? 'audio/mpeg' : 'video/mp4';
+        
         // Create blob and download
-        const blob = new Blob(chunks, { type: 'video/mp4' });
+        const blob = new Blob(chunks, { type: mimeType });
         const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = `${(currentVideoInfo.title || 'video').replace(/[^\w\s-]/g, '')}.mp4`;
+        a.download = `${(currentVideoInfo.title || 'video').replace(/[^\w\s-]/g, '').substring(0, 100)}.${ext}`;
         document.body.appendChild(a);
         a.click();
         URL.revokeObjectURL(blobUrl);
@@ -1045,7 +1125,7 @@ async function handleDownload() {
             progressPercentage.textContent = 'Stopped';
         } else {
             console.error('Download error:', error);
-            showError('Download failed. Please try again.');
+            showError('Download failed: ' + (error.message || 'Please try again.'));
         }
         
         downloadVideoBtn.querySelector('span').textContent = 'Download Video';
@@ -1083,25 +1163,7 @@ async function handleDownloadThumbnail() {
             thumbnailUrl = `https://i.ytimg.com/vi/${currentVideoInfo.id}/maxresdefault.jpg`;
         }
         
-        // Check if running in native Android app
-        if (isNativeApp && window.Android && window.Android.downloadThumbnail) {
-            // Use native Android bridge for thumbnail download
-            const resultJson = window.Android.downloadThumbnail(
-                thumbnailUrl, 
-                currentVideoInfo.id || '', 
-                currentVideoInfo.title || 'thumbnail'
-            );
-            const result = JSON.parse(resultJson);
-            
-            if (result.success) {
-                showSuccess('Thumbnail saved: ' + (result.filename || 'thumbnail.jpg'));
-            } else {
-                throw new Error(result.error || 'Failed to download thumbnail');
-            }
-            return;
-        }
-        
-        // Web mode - Fetch the image through a proxy to avoid CORS
+        // Fetch the image through a proxy to avoid CORS
         const response = await fetch(`${API_BASE_URL}/download-thumbnail`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1140,36 +1202,18 @@ async function handleFetchPlaylistInfo(url) {
     showLoading('Fetching playlist information...');
     
     try {
-        let playlistInfo;
+        const response = await fetch(`${API_BASE_URL}/playlist-info`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
         
-        if (isNativeApp) {
-            // Use native Android bridge
-            playlistInfo = await new Promise((resolve, reject) => {
-                const callbackName = createNativeCallback((result) => {
-                    if (result.error) {
-                        reject(new Error(result.error));
-                    } else {
-                        resolve(result);
-                    }
-                });
-                AquaSeal.getPlaylistInfo(url, callbackName);
-            });
-        } else {
-            // Use HTTP API
-            const response = await fetch(`${API_BASE_URL}/playlist-info`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url })
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || 'Failed to fetch playlist information');
-            }
-            
-            playlistInfo = await response.json();
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to fetch playlist information');
         }
         
+        const playlistInfo = await response.json();
         currentPlaylistInfo = playlistInfo;
         
         // Reset selection state
@@ -1347,25 +1391,6 @@ async function downloadPlaylistVideo(videoUrl, videoTitle, quality = 'best', ite
     try {
         const formatId = getFormatIdFromQuality(quality);
         
-        // Check if running in native Android app
-        if (isNativeApp && window.Android && window.Android.downloadVideo) {
-            // Use native Android bridge for playlist video download
-            const resultJson = window.Android.downloadVideo(videoUrl, formatId, quality);
-            const result = JSON.parse(resultJson);
-            
-            if (result.success) {
-                if (itemElement) {
-                    itemElement.classList.remove('downloading');
-                    itemElement.classList.add('downloaded');
-                }
-                showSuccess(`Downloaded: ${result.filename || videoTitle}`);
-                return true;
-            } else {
-                throw new Error(result.error || 'Download failed');
-            }
-        }
-        
-        // Web mode - use fetch API
         const response = await fetch(`${API_BASE_URL}/download-playlist-video`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
