@@ -252,7 +252,28 @@ const TRANSLATIONS = {
         noDownloadsDesc: 'Your downloaded videos, thumbnails and playlists will appear here',
         startDownloading: 'Start Downloading',
         deleteDownload: 'Delete',
-        openFile: 'Open File'
+        openFile: 'Open File',
+        // Bottom Navigation
+        home: 'Home',
+        about: 'About',
+        // About Page
+        aboutTagline: 'Universal Video Downloader',
+        developedBy: 'Developed by',
+        viewOnGithub: 'View on GitHub',
+        aboutDescription: 'AquaSeal is a powerful, privacy-focused video downloader that supports 1000+ websites. Download videos from YouTube, Instagram, TikTok, Facebook, Twitter and many more platforms directly to your device.',
+        features: 'Features',
+        feature1: '1000+ supported websites',
+        feature2: 'On-device processing - no external servers',
+        feature3: 'Multiple quality options (4K, 1080p, 720p)',
+        feature4: 'Playlist support for batch downloads',
+        feature5: 'Privacy-first - your data stays on device',
+        feature6: 'Download thumbnails separately',
+        poweredBy: 'Powered by',
+        ytdlpDesc: 'Video extraction',
+        capacitorDesc: 'Native runtime',
+        chaquopyDesc: 'Python integration',
+        licenseText: 'This is free software, licensed under the GNU General Public License v3.0',
+        madeWithLove: 'Made with ❤️ for video lovers'
     },
     ur: {
         tagline: 'یونیورسل ویڈیو ڈاؤنلوڈر',
@@ -330,7 +351,28 @@ const TRANSLATIONS = {
         noDownloadsDesc: 'آپ کی ڈاؤنلوڈ شدہ ویڈیوز، تھمب نیلز اور پلے لسٹس یہاں دکھائی دیں گی',
         startDownloading: 'ڈاؤنلوڈ شروع کریں',
         deleteDownload: 'حذف کریں',
-        openFile: 'فائل کھولیں'
+        openFile: 'فائل کھولیں',
+        // Bottom Navigation
+        home: 'ہوم',
+        about: 'معلومات',
+        // About Page
+        aboutTagline: 'یونیورسل ویڈیو ڈاؤنلوڈر',
+        developedBy: 'تیار کردہ',
+        viewOnGithub: 'گِٹ ہب پر دیکھیں',
+        aboutDescription: 'AquaSeal ایک طاقتور، پرائیویسی فوکسڈ ویڈیو ڈاؤنلوڈر ہے جو 1000+ ویب سائٹس کو سپورٹ کرتا ہے۔ یوٹیوب، انسٹاگرام، ٹک ٹاک، فیس بک، ٹویٹر اور بہت سی پلیٹ فارمز سے ویڈیوز براہ راست اپنے ڈیوائس پر ڈاؤنلوڈ کریں۔',
+        features: 'خصوصیات',
+        feature1: '1000+ معاون ویب سائٹس',
+        feature2: 'آن ڈیوائس پروسیسنگ - کوئی بیرونی سرور نہیں',
+        feature3: 'متعدد کوالٹی آپشنز (4K, 1080p, 720p)',
+        feature4: 'بیچ ڈاؤنلوڈز کے لیے پلے لسٹ سپورٹ',
+        feature5: 'پرائیویسی فرسٹ - آپ کا ڈیٹا ڈیوائس پر رہتا ہے',
+        feature6: 'تھمب نیلز الگ سے ڈاؤنلوڈ کریں',
+        poweredBy: 'پاورڈ بائے',
+        ytdlpDesc: 'ویڈیو ایکسٹریکشن',
+        capacitorDesc: 'نیٹیو رن ٹائم',
+        chaquopyDesc: 'پائتھون انٹیگریشن',
+        licenseText: 'یہ فری سافٹ ویئر ہے، GNU General Public License v3.0 کے تحت لائسنس یافتہ',
+        madeWithLove: '❤️ کے ساتھ ویڈیو سے محبت کرنے والوں کے لیے بنایا گیا'
     },
     hi: {
         tagline: 'यूनिवर्सल वीडियो डाउनलोडर',
@@ -408,7 +450,28 @@ const TRANSLATIONS = {
         noDownloadsDesc: 'आपके डाउनलोड किए गए वीडियो, थंबनेल और प्लेलिस्ट यहां दिखाई देंगे',
         startDownloading: 'डाउनलोड शुरू करें',
         deleteDownload: 'हटाएं',
-        openFile: 'फाइल खोलें'
+        openFile: 'फाइल खोलें',
+        // Bottom Navigation
+        home: 'होम',
+        about: 'जानकारी',
+        // About Page
+        aboutTagline: 'यूनिवर्सल वीडियो डाउनलोडर',
+        developedBy: 'द्वारा विकसित',
+        viewOnGithub: 'गिटहब पर देखें',
+        aboutDescription: 'AquaSeal एक शक्तिशाली, प्राइवेसी-फोकस्ड वीडियो डाउनलोडर है जो 1000+ वेबसाइटों को सपोर्ट करता है। YouTube, Instagram, TikTok, Facebook, Twitter और कई अन्य प्लेटफॉर्म से वीडियो सीधे अपने डिवाइस पर डाउनलोड करें।',
+        features: 'विशेषताएं',
+        feature1: '1000+ समर्थित वेबसाइट्स',
+        feature2: 'ऑन-डिवाइस प्रोसेसिंग - कोई बाहरी सर्वर नहीं',
+        feature3: 'मल्टीपल क्वालिटी ऑप्शंस (4K, 1080p, 720p)',
+        feature4: 'बैच डाउनलोड के लिए प्लेलिस्ट सपोर्ट',
+        feature5: 'प्राइवेसी-फर्स्ट - आपका डेटा डिवाइस पर रहता है',
+        feature6: 'थंबनेल अलग से डाउनलोड करें',
+        poweredBy: 'पावर्ड बाय',
+        ytdlpDesc: 'वीडियो एक्सट्रैक्शन',
+        capacitorDesc: 'नेटिव रनटाइम',
+        chaquopyDesc: 'पायथन इंटीग्रेशन',
+        licenseText: 'यह फ्री सॉफ्टवेयर है, GNU General Public License v3.0 के तहत लाइसेंस प्राप्त',
+        madeWithLove: 'वीडियो लवर्स के लिए ❤️ से बनाया गया'
     },
     hinglish: {
         tagline: 'Universal Video Downloader',
@@ -486,7 +549,28 @@ const TRANSLATIONS = {
         noDownloadsDesc: 'Tumhare download kiye gaye videos, thumbnails aur playlists yahan dikhenge',
         startDownloading: 'Download Shuru Karo',
         deleteDownload: 'Delete Karo',
-        openFile: 'File Kholo'
+        openFile: 'File Kholo',
+        // Bottom Navigation
+        home: 'Home',
+        about: 'About',
+        // About Page
+        aboutTagline: 'Universal Video Downloader',
+        developedBy: 'Developed by',
+        viewOnGithub: 'GitHub pe dekho',
+        aboutDescription: 'AquaSeal ek powerful, privacy-focused video downloader hai jo 1000+ websites ko support karta hai. YouTube, Instagram, TikTok, Facebook, Twitter aur bahut saari platforms se videos seedha apne device pe download karo.',
+        features: 'Features',
+        feature1: '1000+ supported websites',
+        feature2: 'On-device processing - koi external server nahi',
+        feature3: 'Multiple quality options (4K, 1080p, 720p)',
+        feature4: 'Batch downloads ke liye playlist support',
+        feature5: 'Privacy-first - tumhara data device pe hi rehta hai',
+        feature6: 'Thumbnails alag se download karo',
+        poweredBy: 'Powered by',
+        ytdlpDesc: 'Video extraction',
+        capacitorDesc: 'Native runtime',
+        chaquopyDesc: 'Python integration',
+        licenseText: 'Yeh free software hai, GNU General Public License v3.0 ke under licensed',
+        madeWithLove: 'Video lovers ke liye ❤️ se banaya gaya'
     }
 };
 
@@ -706,6 +790,10 @@ function addToDownloadsHistory(item) {
         downloads.pop();
     }
     saveDownloadsHistory(downloads);
+    // Update nav badge
+    if (typeof updateNavDownloadBadge === 'function') {
+        updateNavDownloadBadge();
+    }
     return downloads;
 }
 
@@ -714,6 +802,10 @@ function removeFromDownloadsHistory(id) {
     const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
     const filtered = downloads.filter(d => d.id !== numericId && d.id !== id && String(d.id) !== String(id));
     saveDownloadsHistory(filtered);
+    // Update nav badge
+    if (typeof updateNavDownloadBadge === 'function') {
+        updateNavDownloadBadge();
+    }
     return filtered;
 }
 
@@ -832,11 +924,41 @@ let batchDownloadAborted = false;
 // ===========================
 // Page Navigation
 // ===========================
+
+// Track current active nav item
+let currentNavItem = 'home';
+
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
     });
     document.getElementById(pageId).classList.add('active');
+    
+    // Update bottom nav active state based on page
+    updateBottomNavState(pageId);
+}
+
+function updateBottomNavState(pageId) {
+    const bottomNav = document.getElementById('bottom-nav');
+    if (!bottomNav) return;
+    
+    // Map page IDs to nav items
+    const pageToNav = {
+        'platform-page': 'home',
+        'download-page': 'home',
+        'sites-page': 'home',
+        'tutorial-page': 'home',
+        'downloads-page': 'downloads',
+        'about-page': 'about'
+    };
+    
+    const navItem = pageToNav[pageId] || 'home';
+    currentNavItem = navItem;
+    
+    // Update active class
+    bottomNav.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.nav === navItem);
+    });
 }
 
 function goToPlatformPage() {
@@ -856,6 +978,10 @@ function goToTutorialPage() {
 function goToDownloadsPage() {
     showPage('downloads-page');
     renderDownloadsList();
+}
+
+function goToAboutPage() {
+    showPage('about-page');
 }
 
 function goToDownloadPage(platform) {
@@ -925,6 +1051,41 @@ if (downloadsBtn) {
 }
 if (downloadsBackBtn) {
     downloadsBackBtn.addEventListener('click', goToPlatformPage);
+}
+
+// Bottom Navigation
+const bottomNav = document.getElementById('bottom-nav');
+if (bottomNav) {
+    bottomNav.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const navTarget = item.dataset.nav;
+            switch (navTarget) {
+                case 'home':
+                    goToPlatformPage();
+                    break;
+                case 'downloads':
+                    goToDownloadsPage();
+                    break;
+                case 'about':
+                    goToAboutPage();
+                    break;
+            }
+        });
+    });
+}
+
+// Update nav download badge when downloads change
+function updateNavDownloadBadge() {
+    const navBadge = document.getElementById('nav-download-badge');
+    if (navBadge) {
+        const downloads = getDownloadsHistory();
+        if (downloads.length > 0) {
+            navBadge.textContent = downloads.length > 99 ? '99+' : downloads.length.toString();
+            navBadge.classList.remove('hidden');
+        } else {
+            navBadge.classList.add('hidden');
+        }
+    }
 }
 
 // Downloads filter buttons
@@ -1078,6 +1239,30 @@ function renderDownloadsList() {
             if (currentDownloadsFilter === 'playlist') return item.type === 'playlist';
             return true;
         });
+    }
+    
+    // Calculate total downloads count and size
+    const totalCount = downloads.length;
+    let totalSizeBytes = 0;
+    downloads.forEach(item => {
+        if (item.size) {
+            // Parse size string like "45.2 MB" or "1.2 GB"
+            const match = item.size.match(/([\d.]+)\s*(B|KB|MB|GB)/i);
+            if (match) {
+                const value = parseFloat(match[1]);
+                const unit = match[2].toUpperCase();
+                const multipliers = { 'B': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024 };
+                totalSizeBytes += value * (multipliers[unit] || 1);
+            }
+        }
+    });
+    
+    // Update stats display
+    if (totalDownloadsCount) {
+        totalDownloadsCount.textContent = totalCount.toString();
+    }
+    if (totalDownloadsSize) {
+        totalDownloadsSize.textContent = formatFilesize(totalSizeBytes) || '0 MB';
     }
     
     if (filteredHistory.length === 0) {
@@ -1365,6 +1550,42 @@ function createQualityOption(value, name, resolution, checked) {
     return label;
 }
 
+// Animated progress simulation for native downloads
+let progressAnimationInterval = null;
+let simulatedProgress = 0;
+
+function startProgressAnimation() {
+    simulatedProgress = 0;
+    progressBarFill.classList.add('indeterminate');
+    progressAnimationInterval = setInterval(() => {
+        // Gradually increase progress, slowing down as it approaches 90%
+        if (simulatedProgress < 20) {
+            simulatedProgress += Math.random() * 3 + 1;
+        } else if (simulatedProgress < 50) {
+            simulatedProgress += Math.random() * 2 + 0.5;
+        } else if (simulatedProgress < 75) {
+            simulatedProgress += Math.random() * 1.5 + 0.3;
+        } else if (simulatedProgress < 90) {
+            simulatedProgress += Math.random() * 0.5 + 0.1;
+        }
+        simulatedProgress = Math.min(simulatedProgress, 90);
+        progressBarFill.style.width = `${simulatedProgress}%`;
+        progressPercentage.textContent = `${Math.round(simulatedProgress)}%`;
+    }, 300);
+}
+
+function stopProgressAnimation(success = true) {
+    if (progressAnimationInterval) {
+        clearInterval(progressAnimationInterval);
+        progressAnimationInterval = null;
+    }
+    progressBarFill.classList.remove('indeterminate');
+    if (success) {
+        progressBarFill.style.width = '100%';
+        progressPercentage.textContent = '100%';
+    }
+}
+
 async function handleDownload() {
     if (!currentVideoInfo) return;
     
@@ -1375,9 +1596,12 @@ async function handleDownload() {
         downloadVideoBtn.disabled = true;
         downloadVideoBtn.querySelector('span').textContent = 'Downloading...';
         downloadProgress.classList.remove('hidden');
-        progressBarFill.style.width = '10%';
-        progressPercentage.textContent = 'Processing...';
-        progressSpeed.textContent = 'Please wait...';
+        progressBarFill.style.width = '5%';
+        progressPercentage.textContent = '5%';
+        progressSpeed.textContent = 'Downloading...';
+        
+        // Start animated progress simulation
+        startProgressAnimation();
         
         try {
             const result = await callPythonAPI('downloadVideo', {
@@ -1391,8 +1615,7 @@ async function handleDownload() {
                 throw new Error(result.error);
             }
             
-            progressBarFill.style.width = '100%';
-            progressPercentage.textContent = '100%';
+            stopProgressAnimation(true);
             progressSpeed.textContent = 'Complete!';
             downloadVideoBtn.querySelector('span').textContent = 'Downloaded! ✓';
             
@@ -1423,6 +1646,7 @@ async function handleDownload() {
             
         } catch (error) {
             console.error('Download error:', error);
+            stopProgressAnimation(false);
             showError('Download failed: ' + (error.message || 'Unknown error'));
             downloadVideoBtn.querySelector('span').textContent = 'Download Video';
             downloadVideoBtn.disabled = false;
@@ -2216,4 +2440,6 @@ window.addEventListener('load', () => {
     setLanguage(currentLanguage);
     // Update downloads badge count
     updateDownloadsBadge();
+    // Update nav download badge
+    updateNavDownloadBadge();
 });
