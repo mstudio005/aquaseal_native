@@ -7,6 +7,8 @@
 [![Platform](https://img.shields.io/badge/platform-Android-green.svg)](android/)
 [![Built with Capacitor](https://img.shields.io/badge/made%20with-Capacitor-119EFF.svg)](https://capacitorjs.com/)
 [![Chaquopy Python](https://img.shields.io/badge/python-Chaquopy%203.12-yellow.svg)](https://chaquo.com/chaquopy/)
+[![Download APK](https://img.shields.io/github/v/release/mstudio005/aquaseal_native?label=Download%20APK&color=brightgreen)](https://github.com/mstudio005/aquaseal_native/releases/latest)
+[![Get it on Itch.io](https://static.itch.io/images/badge-color.svg)](https://mstudio005.itch.io/aquaseal)
 
 AquaSeal brings together a modern glassmorphism UI, multi-language strings (English, Urdu, Hindi, Hinglish) and an embedded Chaquopy environment so that the app never calls out to remote servers. The APK contains yt-dlp, Python modules, UI assets, and native bridges—install and download immediately, even in airplane mode.
 
