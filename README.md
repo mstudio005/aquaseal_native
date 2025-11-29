@@ -1,4 +1,3 @@
-# Install the generated APK on a device/emulator:
 # AquaSeal
 
 > A fully offline, multilingual media downloader that ships with its own Python 3.12 + yt-dlp runtime inside a Capacitor-powered Android app.
@@ -204,3 +203,80 @@ GPL-3.0-or-later. See [`LICENSE`](LICENSE) for the full text.
 - Chaquopy + yt-dlp maintainers
 - Early testers who pushed for offline capability and localization ❤️
 - Built with Capacitor, Chaquopy and yt-dlp.
+
+## Installation
+
+## 📱 Android (APK)
+
+To install AquaSeal on an Android device:
+
+1. Download the latest AquaSeal APK from
+👉 GitHub Releases or Itch.io
+
+
+2. Open the downloaded APK.
+
+
+3. If prompted, enable Install unknown apps.
+
+
+4. Install and launch AquaSeal.
+
+
+5. Everything runs fully offline — no servers required.
+
+
+
+
+---
+
+## 💻 Desktop (PC) — Development Preview
+
+AquaSeal also includes a web frontend + local backend you can run on your computer.
+
+Requirements
+
+Node.js (LTS recommended)
+
+Git
+
+Any modern browser
+
+
+Steps
+
+1. Clone the repository
+
+git clone https://github.com/mstudio005/aquaseal_native.git
+cd aquaseal_native
+
+
+2. Run the UI (frontend)
+
+Open index.html in your browser
+(located in the project root folder)
+
+
+
+3. Start the backend server
+
+cd backend
+npm install
+npm start
+
+
+4. The backend will run locally, and the UI in your browser will connect to it.
+
+
+
+
+---
+
+## 🚧 Notes
+
+The desktop setup is intended for development and debugging, not as a full desktop version.
+
+All processing still happens locally on your machine.
+
+The Android APK includes the Python + yt-dl-p + FFmpeg runtime, but the PC version does not auto-install these.
+Installation
