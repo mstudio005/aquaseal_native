@@ -5,7 +5,7 @@
 
 // Check if running in Capacitor (Android app)
 const isCapacitor = typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform && Capacitor.isNativePlatform();
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'https://backend.mutaib.me/api';
 
 // Capacitor Plugin Bridge
 let PythonBridge = null;

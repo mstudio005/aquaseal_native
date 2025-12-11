@@ -3,7 +3,7 @@ import cors from 'cors';
 import ytDlp from 'yt-dlp-exec';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // ===========================
 // CONTENT FILTERING - Block Adult/Inappropriate Content
@@ -660,7 +660,7 @@ app.post('/api/download-playlist-video', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`
 ╔════════════════════════════════════════╗
 ║   🌊 AquaSeal API Server Running 🌊   ║
@@ -675,4 +675,5 @@ app.listen(PORT, () => {
 ║    POST /api/download-playlist-video   ║
 ╚════════════════════════════════════════╝
     `);
+});
 });
