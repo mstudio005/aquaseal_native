@@ -8,8 +8,8 @@ WORKDIR /app
 COPY . /app
 
 # The base image already has Python and Node installed.
-# We just need to link 'python' to 'python3' for that one specific npm package check.
-RUN ln -s /usr/bin/python3 /usr/bin/python
+# We force a symbolic link 'python' to point to 'python3' for the npm package check.
+RUN ln -sf /usr/bin/python3 /usr/bin/python
 
 # Install Node.js dependencies
 RUN npm ci
