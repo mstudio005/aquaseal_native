@@ -1,18 +1,36 @@
-# Use a combined, optimized image that already has Node and Python
-FROM heroku/heroku:22-build
+# Use Ubuntu base image
+FROM ubuntu:22.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV NODE_VERSION=20.x
 
 # Set the working directory
 WORKDIR /app
 
-# Copy application code
-COPY . /app
+# Install system dependencies, Node.js, and Python
+RUN apt-get update && \
+    apt-get install -y curl ca-certificates gnupg python3 python3-pip ffmpeg && \
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update && \
+    apt-get install -y nodejs && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# The base image already has Python and Node installed.
-# We force a symbolic link 'python' to point to 'python3' for the npm package check.
-RUN ln -sf /usr/bin/python3 /usr/bin/python
+# Copy package files first for better caching
+COPY package*.json ./
 
 # Install Node.js dependencies
-RUN npm ci
+RUN npm ci --omit=dev
 
-# Define the command to run your application (update with your actual start command)
+# Copy application code
+COPY . .
+
+# Expose port (adjust if needed)
+EXPOSE 3000
+
+# Define the command to run your application
 CMD ["npm", "start"]
